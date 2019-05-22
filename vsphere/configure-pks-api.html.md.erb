@@ -1,14 +1,29 @@
-##<a id='retrieve-pks-api'></a> Step 4: Retrieve the PKS API Endpoint
+---
+title: Configure the PKS API Load Balancer 
+owner: PKS
+iaas: vSphere
+---
+
+This topic describes how to configure an external load balancer for the PKS API. 
+
+## <a id='overview'></a> Overview 
+
+You must configure an external load balancer to make the PKS API accessible from outside the network.
+This external load balancer forwards traffic to the PKS API endpoint on ports 8443 and 9021.
+You can use any external load balancer for the PKS API.
+
+To set up an external load balancer for the PKS API, do the following after you install the <%= vars.product_tile %> tile:
+
+* [Retrieve the PKS API Endpoint](#retrieve-pks-api)
+* [Configure an External Load Balancer](#loadbalancer-pks-api)
+
+##<a id='retrieve-pks-api'></a> Retrieve the PKS API Endpoint
 
 <%= partial 'share-endpoint' %>
 
-## <a id='loadbalancer-pks-api'></a> Step 5: Configure External Load Balancer
+## <a id='loadbalancer-pks-api'></a> Configure an External Load Balancer
 
-After you install the <%= vars.product_tile %> tile, configure an external load balancer to access the PKS API from outside the network.
-You can use any external load balancer.
-
-Your external load balancer forwards traffic to the PKS API endpoint on ports 8443 and 9021.
-Configure the external load balancer to resolve to the domain name you set in the [PKS API](#pks-api) section of the tile configuration.
+Configure the external load balancer to resolve to the domain name you set in the [PKS API](installing-pks-vsphere.html#pks-api) section of _Installing  on vSphere_.
 
 Configure your load balancer with the following information:
 
