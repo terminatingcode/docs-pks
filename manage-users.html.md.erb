@@ -17,51 +17,6 @@ To run UAAC commands from the Ops Manager VM, see the following SSH procedures f
 
 To install UAAC locally, see [Component: User Account and Authentication (UAA) Server](https://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html).
 
-### <a id='ssh-vsphere'></a>SSH into the Ops Manager VM on vSphere
-
-To SSH into the Ops Manager VM on vSphere, you need the credentials used to import the PCF .ova or .ovf file into your virtualization system.
-You set these credentials when you installed Ops Manager.
-
-<p class="note"><strong>Note</strong>: If you lose your credentials, you must shut down the Ops Manager VM in the vSphere UI and reset the password. See <a href="https://docs.vmware.com/en/VMware-vSphere/6.5/com.vmware.vsphere.security.doc/GUID-4BDBF79A-6C16-43B0-B0B1-637BF5516112.html">vCenter Password Requirements and Lockout Behavior</a> in the vSphere documentation for more information.</p>
-
-1. From a command line, run the following command to SSH into the Ops Manager VM:
-
-    ```
-    ssh ubuntu@OPS-MANAGER-FQDN
-    ```
-    Where `OPS-MANAGER-FQDN` is the fully qualified domain name (FQDN) of Ops Manager.
-
-1. When prompted, enter the password that you set during the .ova deployment
-into vCenter. For example:
-  <pre class="terminal">
-  $ ssh ubuntu&#64;my-opsmanager-fqdn.example.com
-  Password: ***********
-  </pre>
-
-1. Proceed to the [Log in as an Admin](#uaa-admin-login) section to manage users with UAAC.
-
-### <a id='ssh-gcp'></a>SSH into the Ops Manager VM on GCP
-
-To SSH into the Ops Manager VM in GCP, do the following:
-
-1. Confirm that you have installed the gcloud CLI. See [Downloading gcloud](https://cloud.google.com/sdk/gcloud/#downloading_gcloud) in the Google Cloud Platform documentation for more information.
-
-1. From the GCP console, click **Compute Engine**.
-
-1. Locate the Ops Manager VM in the **VM Instances** list.
-
-1. Click the **SSH** menu button.
-
-1. Copy the SSH command that appears in the popup window.
-
-1. Paste the command into your terminal window to SSH to the Ops Manager VM. For example:
-    <pre class="terminal">
-    $ gcloud compute ssh om-pcf-1a --zone us-central1-b
-    </pre>
-
-1. Run `sudo su - ubuntu` to switch to the `ubuntu` user.
-
-1. Proceed to the [Log in as an Admin](#uaa-admin-login) section to manage users with UAAC.
 
 ### <a id='ssh-aws'></a>SSH into the Ops Manager VM on AWS
 

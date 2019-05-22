@@ -1,3 +1,169 @@
-## <a name='auth'></a>Step 8: Configure Authentication for <%= vars.product_short %>
+----
+title: Set up Enterprise PKS Admin Users
+owner: PKS
+iaas: vsphere
+----
 
-<%= partial 'configure-auth' %>
+This topic describes how to manage users in <%= vars.product_full %> with User Account and Authentication (UAA).
+Create and manage users in UAA with the UAA Command Line Interface (UAAC).
+
+## <a id='uaac'></a>How to Use UAAC
+
+Use the UAA Command Line Interface (UAAC) to interact with the UAA server.
+You can either run UAAC commands from the Ops Manager VM or install UAAC on your local workstation.
+
+To run UAAC commands from the Ops Manager VM, see the following SSH procedures for [vSphere](#ssh-vsphere) or [Google Cloud Platform (GCP)](#ssh-gcp).
+
+To install UAAC locally, see [Component: User Account and Authentication (UAA) Server](https://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html).
+
+### <a id='ssh-vsphere'></a>SSH into the Ops Manager VM on vSphere
+
+To SSH into the Ops Manager VM on vSphere, you need the credentials used to import the PCF .ova or .ovf file into your virtualization system.
+You set these credentials when you installed Ops Manager.
+
+<p class="note"><strong>Note</strong>: If you lose your credentials, you must shut down the Ops Manager VM in the vSphere UI and reset the password. See <a href="https://docs.vmware.com/en/VMware-vSphere/6.5/com.vmware.vsphere.security.doc/GUID-4BDBF79A-6C16-43B0-B0B1-637BF5516112.html">vCenter Password Requirements and Lockout Behavior</a> in the vSphere documentation for more information.</p>
+
+1. From a command line, run the following command to SSH into the Ops Manager VM:
+
+    ```
+    ssh ubuntu@OPS-MANAGER-FQDN
+    ```
+    Where `OPS-MANAGER-FQDN` is the fully qualified domain name (FQDN) of Ops Manager.
+
+1. When prompted, enter the password that you set during the .ova deployment
+into vCenter. For example:
+  <pre class="terminal">
+  $ ssh ubuntu&#64;my-opsmanager-fqdn.example.com
+  Password: ***********
+  </pre>
+
+1. Proceed to the [Log in as an Admin](#uaa-admin-login) section to manage users with UAAC.
+
+##<a id='uaa-admin-login'></a> Log in as a UAA Admin
+
+To retrieve the UAA management admin client secret, do the following:
+
+1. In a web browser, navigate to the FQDN of Ops Manager and click the **<%= vars.product_tile %>** tile.
+
+1. Click **Credentials**.
+
+1. To view the secret, click **Link to Credential** next to **Pks Uaa Management Admin Client**. The client username is `admin`.
+
+1. On the command line, run the following command to target your UAA server:
+
+    ```
+    uaac target https://PKS-API:8443 --ca-cert CERT-PATH
+    ```
+
+    Where:
+    * `PKS-API` is the URL to your PKS API server. You configured this URL in the PKS API section of _Installing <%= vars.product_short %>_ for your IaaS. For example, see [Installing <%= vars.product_short %> on vSphere](installing-pks-vsphere.html#pks-api).
+    If you are logged in to the Ops Manager VM, the root certificate is located at `/var/tempest/workspaces/default/root_ca_certificate`.
+    * `CERT-PATH` is the path to your root CA certificate. Provide the certificate to validate the PKS API certificate with SSL.
+    For example:
+    <pre class="terminal">
+    $ uaac target api.pks.example.com:8443 --ca-cert /var/tempest/workspaces/default/root_ca_certificate
+    </pre>
+    <p class="note"><strong>Note</strong>: If you receive an <code>Unknown key: Max-Age = 86400</code> warning message, you can safely ignore it because it has no impact.</p>
+
+1. Run the following command to authenticate with UAA using the secret you retrieved in a previous
+step:
+
+    ```
+    uaac token client get admin -s ADMIN-CLIENT-SECRET
+    ```
+    Where `ADMIN-CLIENT-SECRET` is your UAA management admin client secret.
+
+
+  ##<a id='pks-access'></a> Grant <%= vars.product_short %> Access
+
+<%= vars.product_short %> access gives users the ability to deploy and manage Kubernetes clusters.
+As an Admin user, you can assign the following UAA scopes to users, external LDAP groups, and clients:
+
+  * `pks.clusters.manage`: Accounts with this scope can create and access their own clusters.
+  * `pks.clusters.admin`: Accounts with this scope can create and access all clusters.
+
+###<a id='uaa-user'></a> Grant <%= vars.product_short %> Access to a User
+
+You can create a new UAA user with <%= vars.product_short %> access by performing the following steps:
+
+1. Log in as the UAA admin using the procedure in [Log in as a UAA Admin](#uaa-admin-login).
+
+1. To create a new user, run the following command:
+
+    ```
+    uaac user add USERNAME --emails USER-EMAIL -p USER-PASSWORD
+    ```
+
+    For example:
+    <pre class="terminal">$ uaac user add alana --emails alana&#64;example.com -p password</pre>
+
+1. Run the following command to assign a scope to the user to allow them to access Kubernetes
+clusters:
+
+    ```
+    uaac member add UAA-SCOPE USERNAME
+    ```
+    Where `UAA-SCOPE` is one of the UAA scopes defined in [Grant <%= vars.product_short %> Access](#pks-access). For
+    example:
+    <pre class="terminal">$ uaac member add pks.clusters.admin alana</pre>
+
+###<a id='external-group'></a> Grant <%= vars.product_short %> Access to an External LDAP Group
+
+Connecting <%= vars.product_short %> to an LDAP external user store allows the User Account and Authentication (UAA) server to delegate authentication to existing enterprise user stores.
+
+<p class='note'><strong>Note</strong>: When integrating with an external identity provider such as
+LDAP, authentication within the UAA becomes chained. UAA first attempts to authenticate with a
+user's credentials against the UAA user store before the external provider, LDAP. For more
+information, see <a href="https://github.com/cloudfoundry/uaa/blob/master/docs/UAA-LDAP.md#chained-authentication">Chained Authentication</a> in the <em>User Account and Authentication LDAP Integration</em> GitHub documentation.
+</p>
+
+For more information about the process used by the UAA Server when it attempts to authenticate a
+user through LDAP, see the [Configuring LDAP Integration with Pivotal Cloud Foundry](https://community.pivotal.io/s/article/Configuring-LDAP-Integration-with-Pivotal-Cloud-Foundry) Knowledge Base article.
+
+To grant <%= vars.product_short %> access to an external LDAP group, perform the following steps:
+
+1. Log in as the UAA admin using the procedure in [Log in as a UAA Admin](#uaa-admin-login).
+
+1. To assign the `pks.clusters.manage` scope to all users in an LDAP group, run the following command:
+
+    ```
+    uaac group map --name pks.clusters.manage GROUP-DISTINGUISHED-NAME
+    ```
+    Where `GROUP-DISTINGUISHED-NAME` is the LDAP Distinguished Name (DN) for the group. For example:
+    <pre class="terminal">
+    $ uaac group map --name pks.clusters.manage cn=operators,ou=groups,dc=example,dc=com
+    </pre>
+    For more information about LDAP DNs, see the [LDAP DNs and RDNs](https://ldap.com/ldap-dns-and-rdns/) in the LDAP documentation.
+
+1. (Optional) To assign the `pks.clusters.admin` scope to all users in an LDAP group, run the following command:
+
+    ```
+    uaac group map --name pks.clusters.admin GROUP-DISTINGUISHED-NAME
+    ```
+    Where `GROUP-DISTINGUISHED-NAME` is the LDAP DN for the group. For example:
+    <pre class="terminal">
+    $ uaac group map --name pks.clusters.admin cn=operators,ou=groups,dc=example,dc=com
+    </pre>
+
+###<a id='uaa-client'></a> Grant <%= vars.product_short %> Access to a Client
+
+To grant <%= vars.product_short %> access to an automated client for a script or service, perform the following steps:
+
+1. Log in as the UAA admin using the procedure [Log in as a UAA Admin](#uaa-admin-login).
+
+1. Run the following command to create a client with the desired scopes:
+
+    ```
+    uaac client add CLIENT-NAME -s CLIENT-SECRET \
+    --authorized_grant_types client_credentials \
+    --authorities UAA-SCOPES
+    ```
+    Where:
+    * `CLIENT-NAME` and `CLIENT-SECRET` are the client credentials.
+    * `UAA-SCOPES` is one or more of the UAA scopes defined in [Grant <%= vars.product_short %> Access](#pks-access), separated by a comma. For example:
+    <pre class="terminal">
+    $ uaac client add automated-client \
+    -s randomly-generated-secret
+    --authorized_grant_types client_credentials  \
+    --authorities pks.clusters.admin,pks.clusters.manage
+    </pre>
