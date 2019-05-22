@@ -1,0 +1,17 @@
+##<a id='retrieve-pks-api'></a> Step 4: Retrieve the PKS API Endpoint
+
+<%= partial 'share-endpoint' %>
+
+## <a id='loadbalancer-pks-api'></a> Step 5: Configure External Load Balancer
+
+After you install the <%= vars.product_tile %> tile, configure an external load balancer to access the PKS API from outside the network.
+You can use any external load balancer.
+
+Your external load balancer forwards traffic to the PKS API endpoint on ports 8443 and 9021.
+Configure the external load balancer to resolve to the domain name you set in the [PKS API](#pks-api) section of the tile configuration.
+
+Configure your load balancer with the following information:
+
+- IP address from [Retrieve PKS API Endpoint](#retrieve-pks-api)
+- Ports 8443 and 9021
+- HTTPS or TCP protocol

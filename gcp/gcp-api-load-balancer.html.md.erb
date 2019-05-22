@@ -5,6 +5,18 @@ owner: PKS
 
 <strong><%= modified_date %></strong>
 
+_________This is copied from the Installing topic.
+
+##<a id='retrieve-pks-api'></a> Step 4: Retrieve the PKS API Endpoint
+
+<%= partial 'share-endpoint' %>
+
+## <a id='loadbalancer-pks-api'></a> Step 5: Configure External Load Balancer
+
+Follow the procedure in the [Create a Network Tag for the Firewall Rule](gcp-api-load-balancer.html#tag) section of _Creating a GCP Load Balancer for the PKS API_.
+
+_____
+
 This topic describes how to create a load balancer for the PKS API using Google Cloud Platform (GCP).
 
 Before you install <%= vars.product_full %>, you must configure an external TCP load balancer to access the PKS API from outside the network.

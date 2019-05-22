@@ -132,29 +132,7 @@ resources:
 
 <%= partial 'apply-changes' %>
 
-##<a id='retrieve-pks-api'></a> Step 4: Retrieve the PKS API Endpoint
-
-<%= partial 'share-endpoint' %>
-
-## <a id='loadbalancer-pks-api'></a> Step 5: Configure External Load Balancer
-
-Follow the procedure in the [Create a Network Tag for the Firewall Rule](gcp-api-load-balancer.html#tag) section of _Creating a GCP Load Balancer for the PKS API_.
-
-## <a id='clis'></a> Step 6: Install the PKS and Kubernetes CLIs
-
-<%= partial 'install-cli' %>
-
-## <a id='api'></a> Step 7: Configure PKS API Access
-
-Follow the procedures in [Configuring PKS API Access](configure-api.html).
-
-## <a id='auth'></a> Step 8: Configure Authentication for <%= vars.product_short %>
-
-<%= partial 'configure-auth' %>
-
 ##<a id='next-steps'></a> Next Steps
 
 After installing <%= vars.product_short %> on GCP, you may want to do one or more of the following:
 
-* Create a load balancer for your <%= vars.product_short %> clusters. For more information, see [Creating and Configuring a GCP Load Balancer for <%= vars.product_short %> Clusters](gcp-cluster-load-balancer.html).
-* Create your first <%= vars.product_short %> cluster. For more information, see [Creating Clusters](create-cluster.html).
