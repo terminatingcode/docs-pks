@@ -18,7 +18,7 @@ To configure logging in <%= vars.product_tile %>, do the following:
   <p class="note"><strong>Note</strong>: You do not need to provide a new certificate if the TLS certificate for the destination syslog endpoint is signed by a Certificate Authority (CA) in your BOSH certificate store.
   </p>
 <% if current_page.data.iaas == "vSphere" || current_page.data.iaas == "vSphere-NSX-T" %>
-1. <%= partial 'vrealize-logs' %>
+1. <%= partial '../vrealize-logs' %>
 <% else %>
 1. To enable clusters to drain Kubernetes API events and pod logs to sinks, select the **Enable Log Sink Resources** checkbox.
 1. To enable clusters to drain Kubernetes node and pod metrics to sinks, select the **Enable Metric Sink Resources** checkbox.
