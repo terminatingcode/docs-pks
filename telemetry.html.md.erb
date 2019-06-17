@@ -7,53 +7,16 @@ owner: PKS
 
 This topic describes the metrics that the <%= vars.product_tile %> tile
 sends when you enable the VMware Customer Experience Improvement Program (CEIP)
-or the Pivotal Telemetry Program (Telemetry).
+or the Pivotal Telemetry Program (Telemetry). You can opt in or opt out of
+either program in the **Usage Data** pane of the <%= vars.product_tile %> tile.
 
+For more information, see the _Installing <%= vars.product_short %>_ topic for your IaaS:
 
-## <a id="Overview"></a>Overview
+* [vSphere](installing-pks-vsphere.html#usage)
+* [vSphere with NSX-T Integration](installing-nsx-t.html#usage)
+* [Google Cloud Platform (GCP)](installing-pks-gcp.html#usage)
+* [Amazon Web Services (AWS)](installing-pks-aws.html#usage)
 
-Pivotal is committed to using data-driven solutions to adapt <%= vars.product_short %> to better suit your needs. 
-To inform product investments, we offer CEIP and Telemetry for collecting data from customer installations. Collecting this data at scale also enables Pivotal to identify patterns and warning signals that can help
-you improve your usage of <%= vars.product_short %>. 
-
-You can opt in or opt out of CEIP or Telemetry in the **Usage Data** pane of the <%= vars.product_tile %> tile.
-When you opt into either program, you gain 
-access to detailed pod usage information. separated by namespace and cluster. You can use this data for chargeback and showback within your organization. 
-
-You can opt into one of the following participation levels: 
-
-+ **Standard:** The Standard participation level collects data anonymously and cannot
-    be used to identify your organization. Your data is used to identify patterns and inform the ongoing development of  <%= vars.product_short %>.
-
-+ **Enhanced:** The Enhanced participation level enables <%= vars.product_short %> to proactively warn you about security vulnerabilities and potential issues with your software configurations. 
-Your data is stored securely and the identity of your organization is only visible to a select group of people.
-With the Enhanced level you receive the following: 
-    + **Your Telemetry Data:** This enables deeper reporting to build your platform as a product narrative. You can request your Telemetry data from your platform architect or field engineer.
-    + **Proactive Support:** Access to your telemetry data enables us to proactively warn you about unhealthy patterns. 
-    + **Population Benchmarks:** This is your usage relative to the rest of the <%= vars.product_short %> user base. The benchmarks include key statistics like resource usage, pods per worker, node pressure.
-
- For more information about opting into CEIP or Telemetry, see the _Installing <%= vars.product_short %>_ topic for your IaaS:
-
- * [vSphere](installing-pks-vsphere.html#usage)
- * [vSphere with NSX-T Integration](installing-nsx-t.html#usage)
- * [Google Cloud Platform (GCP)](installing-pks-gcp.html#usage)
- * [Amazon Web Services (AWS)](installing-pks-aws.html#usage)
- 
- 
-## <a id="system-data"></a>Telemetry System Components and Data Flow
-
-System Components
-Control Plane
-Telemetry Server: This component receives telemetry from both PKS API and the cluster agent pod, and has 2 uses for them:
-Send some of them to the VMWare analytics cloud (VAC)
-Insert some of them in the DB that’s on the Control Plane for Usage/Billing purposes
-K8s cluster:
-Each cluster will have a telemetry and billing agent deployed on it which samples data from the k8s api at a 10 minute interval, and sends that to the Telemetry Server
-
-Data Flow
-
-![Data Flow](telemetry-data-flow.png)
- 
 ## <a id="envelope"></a>Event Envelope Properties
 
 When <%= vars.product_short %> sends metrics to CEIP or Telemetry, the tile packages the data with

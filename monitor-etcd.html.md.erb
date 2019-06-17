@@ -5,10 +5,13 @@ owner: PKS
 
 <strong><%= modified_date %></strong>
 
-This topic includes information about monitoring the master/etcd node VMs in your <%= vars.product_full %> deployment.
-You can monitor Kubernetes cluster health by monitoring and gathering metrics from etcd.
+This topic describes how platform operators can monitor and retrieve metrics from
+master/etcd node VMs in <%= vars.product_full %> deployments.
 
-<%= vars.product_short %> co-locates etcd, an open source distributed key value store, on Kubernetes master node VMs.
+## <a id="overview"></a>Overview
+etcd is an open source distributed key value store.
+You can monitor Kubernetes cluster health by using metrics from etcd.
+In <%= vars.product_short %>, etcd is co-located on Kubernetes master node VMs.
 The master node VMs use etcd for service discovery and configuration sharing within the cluster.
 
 For more information about etcd, see the [etcd documentation](https://github.com/etcd-io/etcd/tree/master/Documentation) on GitHub.
@@ -22,23 +25,87 @@ Plans section of _Installing <%= vars.product_short %>_ for your IaaS:
 * [Amazon Web Services (AWS)](installing-pks-aws.html#plans)
 * [Azure](installing-pks-azure.html#plans)
 
+<%# I FEEL LIKE THIS SECTION NEEDS TO BE FRAMED DIFFERENTLY. I FEELS MORE LIKE
+AN ASIDE, A NOTE, THAN A SECTION IN ITS OWN RIGHT. I AM NOT SURE HOW THE
+LINK TO THE ETCD DOCS IS DIFFERENT TO WHAT WE ARE DOING ELSEWHERE ON THE PAGE
+
 ## <a id="monitor"></a>Monitor etcd
 
 The etcd VM provides monitoring data on its client port.
-You can enable the `/debug` endpoint for more verbose logging, but this can decrease cluster performance.
+You can enable the `/debug` endpoint for more verbose logging,
+but this can decrease cluster performance.
 
-For more information about monitoring etcd, see [Monitoring etcd](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/monitoring.md) on GitHub.
+For more information about monitoring etcd,
+see [Monitoring etcd](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/monitoring.md)
+on GitHub. %>
 
-## <a id="metrics"></a>Gather Metrics from etcd
+## <a id="monitor"></a>  Monitoring etcd
 
-Each etcd VM exposes metrics on a `/metrics` endpoint.
-Connect a metrics system to etcd  to gather information from the endpoint about cluster health.
+etcd VMs exposes metrics on a `/metrics` endpoint.
+You can connect a third-party monitoring service to etcd  to retrieve cluster information
+from the endpoint.
 
-You can configure any monitoring system of your choice to gather metrics.
+<%#LINK TO THE AVAILABLE METRICS%>
+
 For example, the etcd documentation recommends using the open source Prometheus monitoring service.
-For more information, see the [Prometheus documentation](https://prometheus.io/docs/introduction/overview/).
+For more information, see the
+[Prometheus documentation](https://prometheus.io/docs/introduction/overview/).
+
+To monitor etcd using a monitoring service, you must do the following:
+
+1. [Create a BOSH Sink Resource](#toml)
+1. [Connect etcd to a Monitoring Service](#connect)
+
+### <a id="toml"></a> Create a BOSH Sink Resource
+
+<%# INTRO %>
+
+Create a TOML configuration using the following template:
+
+```
+[[outputs.SERVICE]]
+   apikey="SERVICE-API-KEY"
+[[processors.override]]
+  [processors.override.tags]
+    TAG-KEY = "TAG-VALUE"
+```
+
+Where:
+
++ `SERVICE` is the name of your monitoring service.
++ `SERVICE-API-KEY` is the API key for your monitoring service.
++ `TAG-KEY` is the key for your tag.
++ `TAG-VALUE` is the value for your tag.
+
+<%# INFO ABOUT WHY YOU SHOULD USE TAGS %>
+
+<table>
+    <tr>
+      <th>Tag</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+</table>
+
+### <a id="connect"></a> Connect etcd to a Monitoring Service
+
+To connect a monitoring service to etcd, do the following:
+
+1. From the **Ops Manager Installation Dashboard**, navigate to **<%= vars.product_tile %>** >
+**Settings** > **Monitoring**.
+
+1. For **UI LABEL**, enter a TOML configuration for your monitoring service. For information about
+TOML configurations, see [Create BOSH Sink Resource](#toml) above.
+
+1. Click **Save**
+
+1. Apply Changes
 
 ## <a id="errors"></a>Troubleshoot etcd
 
 We recommend working with Pivotal or VMware Support to troubleshoot master/etcd node VMs.
-The monitoring and metrics data you gather from the master/etcd node VMs can help the Support team diagnose and troubleshoot errors.
+The monitoring and metrics data you retrieve from the master/etcd node VMs
+can help the Support team diagnose and troubleshoot errors.
