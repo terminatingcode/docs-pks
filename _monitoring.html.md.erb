@@ -63,7 +63,7 @@ To deploy a cAdvisor container, do the following:
 
 For more information about integrating this type of monitoring with PKS, see the [VMware vRealize Operations Management Pack for Container Monitoring User Guide](https://docs.vmware.com/en/Management-Packs-for-vRealize-Operations-Manager/1.4/container-monitoring/GUID-BD6B5510-4A16-412D-B5AD-43F74C300C91.html)and [Release Notes](https://docs.vmware.com/en/Management-Packs-for-vRealize-Operations-Manager/1.4/rn/Container-Monitoring-Release-Notes.html) in the VMware documentation.
 
-####<a id='bosh-metric'></a> SOMETHING THAT MATCHES THE UI LABEL
+####<a id='bosh-metric'></a> Telegraf Outputs 
 
 <%#INTRO%>
 
@@ -76,7 +76,7 @@ To connect a monitoring service to etcd, do the following:
 1. For **Setup Telegraf Outputs**, enter the Telegraf outputs for the BOSH metric sink to use. 
 You format these outputs as a TOML configuration for your monitoring service.  
 If you do not want to output any BOSH metrics, leave the default `[[outputs.discard]]` value.
-For information about TOML configurations, see [Create BOSH Metrics Sink Resource](#toml) above.
+For information about TOML configurations, see [Create BOSH Metrics Sink Resource](./monitor-etcd.html#toml) above.
 
 
 <%# WARNING!!!! %>
