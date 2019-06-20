@@ -97,8 +97,10 @@ To connect a monitoring service to etcd, do the following:
 1. From the **Ops Manager Installation Dashboard**, navigate to **<%= vars.product_tile %>** >
 **Settings** > **Monitoring**.
 
-1. For **UI LABEL**, enter a TOML configuration for your monitoring service. For information about
-TOML configurations, see [Create BOSH Metrics Sink Resource](#toml) above.
+1. For **Setup Telegraf Outputs**, enter the Telegraf outputs for the BOSH metric sink to use. 
+You format these outputs as a TOML configuration for your monitoring service.  
+If you do not want to output any BOSH metrics, leave the default `[[outputs.discard]]` value.
+For information about TOML configurations, see [Create BOSH Metrics Sink Resource](#toml) above.
 
 1. Click **Save**
 
