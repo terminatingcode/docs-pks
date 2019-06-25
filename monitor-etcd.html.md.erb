@@ -25,15 +25,12 @@ Plans section of _Installing <%= vars.product_short %>_ for your IaaS:
 * [Amazon Web Services (AWS)](installing-pks-aws.html#plans)
 * [Azure](installing-pks-azure.html#plans)
 
-<%# I FEEL LIKE THIS SECTION NEEDS TO BE FRAMED DIFFERENTLY. I FEELS MORE LIKE
-AN ASIDE, A NOTE, THAN A SECTION IN ITS OWN RIGHT. I AM NOT SURE HOW THE
-LINK TO THE ETCD DOCS IS DIFFERENT TO WHAT WE ARE DOING ELSEWHERE ON THE PAGE
+<%# I CHANGED THIS QUITE A BIT
 
 ## <a id="monitor"></a>Monitor etcd
-
-The etcd VM provides monitoring data on its client port.
-You can enable the `/debug` endpoint for more verbose logging,
-but this can decrease cluster performance.
+PKS includes the ability to configure an agent that 
+reads from the the `/metric` endpoint 
+as well as optionally read from an installed node exporter.
 
 For more information about monitoring etcd,
 see [Monitoring etcd](https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/monitoring.md)
@@ -53,29 +50,29 @@ For more information, see the
 
 To monitor etcd using a monitoring service, you must do the following:
 
-1. [Create a BOSH Metrics Sink Resource](#toml)
-1. [Connect etcd to a Monitoring Service](#connect)
+1. Enable node exporter (optional but recommended)
+1. Configure [telegraf within the tile](https://github.com/influxdata/telegraf/tree/1.11.0/plugins/outputs). 
+1. Apply Changes
 
-### <a id="toml"></a> Create a BOSH Metrics Sink Resource
+### <a id="toml"></a> Using TOML. 
 
 <%# INTRO %>
 
-Create a TOML configuration using the following template:
+Create a TOML configuration for your desired output plugin. 
+You can find samples within the [telgraf repo](https://github.com/influxdata/telegraf/tree/1.11.0/plugins/outputs)
+or try out the following sample below. 
 
+Sample output plugin 
 ```
-[[outputs.SERVICE]]
-   apikey="SERVICE-API-KEY"
+[[outputs.http]]
+   url="https://example.com"
+   method="POST"
+   data_format="JSON"
 [[processors.override]]
   [processors.override.tags]
     TAG-KEY = "TAG-VALUE"
 ```
 
-Where:
-
-+ `SERVICE` is the name of your monitoring service.
-+ `SERVICE-API-KEY` is the API key for your monitoring service.
-+ `TAG-KEY` is the key for your tag.
-+ `TAG-VALUE` is the value for your tag.
 
 <%# INFO ABOUT WHY YOU SHOULD USE TAGS %>
 
@@ -85,20 +82,22 @@ Where:
       <th>Description</th>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
+      <td>Director Name</td>
+      <td>Use this to assign a recognizeable name to your bosh director</td>
     </tr>
 </table>
 
-### <a id="connect"></a> Connect etcd to a Monitoring Service
+### <a id="connect"></a> Configure telegraf within the tile
 
 To connect a monitoring service to etcd, do the following:
 
 1. From the **Ops Manager Installation Dashboard**, navigate to **<%= vars.product_tile %>** >
 **Settings** > **Monitoring**.
 
-1. For **Setup Telegraf Outputs**, enter the Telegraf outputs for the BOSH metric sink to use. 
-You format these outputs as a TOML configuration for your monitoring service.  
+1. Enable the Node Exporter on the master node. This will provide you with additional infrastructure metrics
+which will be available on the localhost of that machine. 
+
+1. For **Setup Telegraf Outputs**, enter the Telegraf outputs TOML and tags for your montiring service.
 If you do not want to output any BOSH metrics, leave the default `[[outputs.discard]]` value.
 For information about TOML configurations, see [Create BOSH Metrics Sink Resource](#toml) above.
 
