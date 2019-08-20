@@ -58,17 +58,14 @@ Defining a Tier-1 Router involves creating the router and attaching it to the lo
 ### Create Tier-1 Router
 
 1. In NSX Manager, select **Routing > Add > Tier-1 Router**.
-
   <img src="images/nsxt/mgmt-plane/create-mgmt-plane-06.png">
 
 1. Configure the Tier-1 Router.
-
   <img src="images/nsxt/mgmt-plane/create-mgmt-plane-07.png">
 
 1. Click **Add**.
 
 1. Verify Tier-1 Router creation.
-
   <img src="images/nsxt/mgmt-plane/create-mgmt-plane-08.png">
 
 ### Create Tier-1 Router Port
@@ -105,6 +102,8 @@ Defining a Tier-1 Router involves creating the router and attaching it to the lo
 
 1. Select the **Tier-1 Router > Overview** screen and verify the configuration of the Tier-1 Router.
   <img src="images/nsxt/mgmt-plane/create-mgmt-plane-15.png">
+
+For most situations, you will want to configure the Tier-1 Management Router to be a distributed router (DR) rather than a service router (SR). A distributed router connects only to the Tier-0 Router. A service router connects to the both the Tier-0 Router and the Edge Cluster. The only reason to make the Tier-1 Management Router a SR is if you want to create NAT rules on the T1. However, PKS does not do this, so for purposes of PKS, you should not do this. 
 
 ##<a id='connect-Ts'></a>Step 4. Connect the Tier-1 Router to the Tier-0 Router
 
