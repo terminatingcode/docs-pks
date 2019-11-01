@@ -8,14 +8,14 @@ In this pane, you can configure <%= vars.product_short %> to
 forward logs from your BOSH-deployed VMs to a syslog endpoint as well as 
 configure transport of multiple metric sources.
 These settings are not visible to Kubernetes cluster users.
-
-![Host Monitoring pane](images/host-monitoring.png)
  
 To configure host monitoring in the <%= vars.product_tile %> tile, do the following:
 
 * To configure Syslog for BOSH-deployed VMs, see [Syslog](#host-syslog).
-* To configure VMware vRealize Log Insight Integration, see [VMware vRealize Log Insight Integration]().
-* To configure the Telegraf agent, [Telegraf](#telegraf).
+<% if current_page.data.iaas == "vSphere" || current_page.data.iaas == "vSphere-NSX-T" %>
+* To configure VMware vRealize Log Insight Integration, see [VMware vRealize Log Insight Integration](#vrealize-logs).
+<% end %>
+* To configure the Telegraf agent, see [Telegraf](#telegraf).
 
 ####<a id='host-syslog'></a> Syslog
 
