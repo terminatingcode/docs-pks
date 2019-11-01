@@ -30,7 +30,7 @@ To configure host monitoring in the <%= vars.product_tile %> tile, do the follow
   	For example, logs may contain cloud provider credentials. 
   	Pivotal strongly recommends that you enable TLS encryption for log forwarding.
   </p>  
-  1. Under **Permitter Peer**, provide the accepted fingerprint (SHA1) or name of remote peer. For example, `*.YOUR-LOGGING-SYSTEM.com`.
+  1. Under **Permitted Peer**, provide the accepted fingerprint (SHA1) or name of remote peer. For example, `*.YOUR-LOGGING-SYSTEM.com`.
   1. Under **TLS Certificate**, provide a TLS certificate for the destination syslog endpoint.
   <p class="note"><strong>Note</strong>: You do not need to provide a new certificate if the TLS certificate for the destination syslog endpoint is signed by a Certificate Authority (CA) in your BOSH certificate store.
   </p>
@@ -48,14 +48,14 @@ and send the metrics to a third-party monitoring service:
 * Node Exporter, a Prometheus monitoring service, provides infrastructure and OS metrics.
 For more information about Node Exporter metrics, see the [Node Exporter](https://github.com/prometheus/node_exporter#enabled-by-default) GitHub repository.  
 * etcd provides local monitoring information that can be used for system health checking and cluster debugging. 
-* Kubelet provides an endpoint with metrics for all workloads running in all Kubernetes clusters.
+* Kubelet provides an endpoint with metrics for all workloads running in each Kubernetes cluster.
 
 To connect a third-party monitoring service to <%= vars.product_short %>, complete the following steps:  
 
 1. Create a configuration file for the third-party monitoring service. 
 1. (Optional) Select **Include etcd metrics**. This includes etcd server and debug metrics. 
 1. (Optional) Select **Enable node exporter on master**. This enables Node Exporter on localhost of all master node VMs. 
-1. (Optional) Select **Include kubelet metrics**. This includes all workload metrics across all Kubernetes clusters. This adds a large volume of metrics.
+1. (Optional) Select **Include kubelet metrics**. This includes all workload metrics across all Kubernetes clusters. Enabling **Include kubelet metrics** adds a large volume of metrics.
 1. Configure **Setup Telegraf Outputs** to enable a third-party monitoring service. Enter the contents of the configuration file you created in [Create a Configuration File](./monitor-etcd.html#toml).  
     If you do not want to output any metrics, leave the default value `[[outputs.discard]]`.
 1. Click **Save**.
